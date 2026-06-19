@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Людмила & Андрій — 28 років разом</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div id="falling-hearts-container"></div>
+
+    <div class="music-player">
+        <button id="music-toggle" class="player-btn">🎵 Звук: OFF</button>
+        <button id="music-next" class="player-btn">⏭️</button>
+        <span id="track-title" class="track-title">Завантаження...</span>
+        <audio id="bg-audio" loop></audio>
+    </div>
+
+    <header class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <p class="anniversary-title">Нікелеве Весілля</p>
+            <h1>Людмила & Андрій</h1>
+            <p class="subtitle">Історія кохання довжиною у 28 років</p>
+            <div id="countdown" class="countdown"></div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="gallery-section">
+            <h2 class="section-title">Хроніка нашого щастя</h2>
+            <div id="timeline" class="timeline-grid"></div>
+        </section>
+
+        <hr class="separator">
+
+        <section class="comments-section">
+            <h2 class="section-title">Куточок спогадів та підказок</h2>
+            <p class="comments-hint">
+                Мамо, тату, якщо ви впізнали місце, подію або точний рік на якійсь із фотографій — напишіть про це в коментарях нижче!
+            </p>
+            <div id="disqus_thread"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>З любов'ю та вдячністю від сина | 2026</p>
+    </footer>
+
+    <div id="custom-slider-overlay" class="c-slider-overlay">
+        <button class="c-slider-close" onclick="closeSlider()">&times;</button>
+
+        <div id="global-slider-blur-bg" class="global-blur-bg"></div>
+
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper" id="swiper-dynamic-wrapper">
+                </div>
+
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="js/gallery-data.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+        var disqus_config = function () {
+            this.page.url = window.location.href;
+            this.page.identifier = 'parents-anniversary-unique-id-2026';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');
+            s.src = 'https://parents-anniversary.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+</body>
+</html>

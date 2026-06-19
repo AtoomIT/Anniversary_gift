@@ -1,0 +1,711 @@
+/* css/style.css */
+
+/* =========================================================================
+   1. СКИДАННЯ СТИЛІВ ТА МУЗЕЙНІ НАЛАШТУВАННЯ
+   ========================================================================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #faf6f0; /* Ніжний кремовий відтінок замість сухого білого */
+    color: #3e3535;
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.container {
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 50px 20px;
+    position: relative;
+    z-index: 5;
+}
+
+/* ЭФЕКТ ПАДІННЯ СЕРДЕЧОК НА ФОНІ СТОРІНКИ */
+#falling-hearts-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1; /* лежить глибоко під контентом */
+    overflow: hidden;
+}
+
+.falling-item {
+    position: absolute;
+    top: -50px;
+    display: inline-block;
+    animation: fallLinear linear forwards;
+    user-select: none;
+}
+@keyframes fallLinear {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(105vh) rotate(360deg); }
+}
+
+/* =========================================================================
+   2. СЕКЦІЯ HERO (ГОЛОВНИЙ ЕКРАН З ТАЙМЕРОМ)
+   ========================================================================= */
+.hero {
+    position: relative;
+    height: 88vh;
+    min-height: 580px;
+    background: linear-gradient(135deg, #e6dcd2 0%, #b8a99a 100%), url('../images/bg.jpg') no-repeat center center/cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+    box-shadow: inset 0 -100px 150px rgba(0,0,0,0.2);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(36, 28, 26, 0.3);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    animation: heroEntrance 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+@keyframes heroEntrance {
+    from { opacity: 0; transform: translateY(30px); filter: blur(5px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+.anniversary-title {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #f7ede4;
+}
+
+.hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 4.2rem;
+    margin-bottom: 12px;
+    font-weight: 600;
+    text-shadow: 2px 4px 15px rgba(0,0,0,0.3);
+}
+
+.subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.6rem;
+    margin-bottom: 40px;
+    color: #fff9f2;
+}
+
+.countdown {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+}
+
+.time-block {
+    background: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 16px 24px;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    min-width: 130px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    color: #fff;
+    transition: transform 0.3s ease;
+}
+.time-block:hover { transform: scale(1.04); }
+
+.time-block span {
+    display: block;
+    font-size: 2.4rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 2px;
+}
+
+/* =========================================================================
+   3. ФОТОГАЛЕРЕЯ (ЕЛЕГАНТНІ РАМОЧКИ-ЦУКЕРОЧКИ)
+   ========================================================================= */
+.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.6rem;
+    text-align: center;
+    margin-bottom: 50px;
+    color: #4a3e3d;
+    position: relative;
+}
+.section-title::after {
+    content: "❤️";
+    display: block;
+    font-size: 1.2rem;
+    margin-top: 10px;
+    opacity: 0.6;
+}
+
+.timeline-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 40px;
+}
+
+/* Сміттєвий фільтр від сторонніх скриптів */
+.timeline-grid > *:not(.photo-card) {
+    display: none !important;
+}
+
+/* ПАСПАРТУ-РАМОЧКА ДЛЯ КОЖНОЇ ФОТОГРАФІЇ */
+.photo-card {
+    background: #fff;
+    padding: 16px; /* Біле вишукане паспарту навколо кадру */
+    border-radius: 4px; /* Класичний кут художньої рами */
+    box-shadow: 0 10px 30px rgba(74, 62, 61, 0.07);
+    border: 1px solid rgba(74, 62, 61, 0.06);
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
+    cursor: zoom-in;
+}
+
+.photo-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 45px rgba(74, 62, 61, 0.15);
+}
+
+.photo-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 133%; /* Ідеальний портретний формат 3:4 */
+    overflow: hidden;
+    border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 0.04); /* Внутрішній тонкий кант рами */
+}
+
+.photo-wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.photo-card:hover .photo-wrapper img {
+    transform: scale(1.05); /* Легке плавне дихання кадру всередині рами */
+}
+
+/* =========================================================================
+   4. СТИЛЬНИЙ МУЗИЧНИЙ ПЛЕЄР
+   ========================================================================= */
+.music-player {
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+    z-index: 999;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(74, 62, 61, 0.15);
+    padding: 12px 20px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+.player-btn {
+    background: #4a3e3d;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-family: inherit;
+    font-weight: 600;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.player-btn:hover { background: #b8a99a; }
+.player-btn:active { transform: scale(0.95); }
+
+.track-title {
+    font-size: 0.8rem;
+    color: #4a3e3d;
+    font-weight: 600;
+    max-width: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* =========================================================================
+   5. КОМЕНТАРІ ТА НИЗ СТОРІНКИ
+   ========================================================================= */
+.separator {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, rgba(0,0,0,0), rgba(74,62,61,0.1), rgba(0,0,0,0));
+    margin: 70px 0;
+}
+
+.comments-hint {
+    text-align: center;
+    max-width: 650px;
+    margin: -20px auto 45px auto;
+    font-size: 1rem;
+    color: #776e65;
+}
+
+footer {
+    text-align: center;
+    padding: 40px;
+    background-color: #ebdcd0;
+    color: #61554d;
+    font-size: 0.85rem;
+    margin-top: 80px;
+}
+
+/* =========================================================================
+   6. ПОВНОЕКРАННИЙ ТЕАТР ДЛЯ СЛАЙДЕРА (ГЛОБАЛЬНИЙ СТАБІЛЬНИЙ BLUR-ФОН)
+   ========================================================================= */
+.c-slider-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #2c1116 0%, #120507 50%, #050102 100%);
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.c-slider-overlay.active {
+    display: flex;
+}
+
+/* Кнопка закриття */
+.c-slider-close {
+    position: absolute;
+    top: 25px;
+    right: 35px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.4);
+    font-size: 46px;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.3s;
+    z-index: 10008;
+}
+.c-slider-close:hover { color: #fff; transform: rotate(180deg); }
+
+/* НАШ ЕКСКЛЮЗИВНИЙ ГЛОБАЛЬНИЙ БЛУР ФОН ПОЗАДУ ВСЬОГО ЕКРАНУ */
+.global-blur-bg {
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    width: 120%;
+    height: 120%;
+    background-size: cover;
+    background-position: center;
+    filter: blur(45px) brightness(0.35) saturate(0.9); /* Потужний красивий блур */
+    z-index: 10001; /* під кубом і під літаючими сердечками */
+    pointer-events: none;
+    transition: background-image 0.5s ease-in-out; /* Плавне перетікання фонових фотографій! */
+}
+
+/* КОНТЕЙНЕР ДЛЯ SWIPER */
+.swiper {
+    width: 100vw;
+    height: 100vh;
+    z-index: 10003; /* вище за фон */
+}
+
+.swiper-slide {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform-style: preserve-3d;
+    background: transparent !important;
+}
+
+/* ПЕРЕДНІЙ ПЛАН: Чітка фотографія у шикарній весільній білій рамі */
+.slide-frame-container {
+    position: relative;
+    max-width: 85vw;
+    max-height: 75vh;
+    padding: 16px;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 40px 120px rgba(0, 0, 0, 0.85);
+    backface-visibility: hidden;
+    z-index: 10004;
+}
+
+.slide-main-img {
+    display: block;
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    border-radius: 2px;
+}
+
+/* Навігація Swiper */
+.swiper-button-next,
+.swiper-button-prev {
+    color: rgba(255, 255, 255, 0.6) !important;
+    transform: scale(0.85);
+    transition: color 0.2s, transform 0.2s;
+    z-index: 10008;
+}
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    color: #fff !important;
+    transform: scale(1);
+}
+
+.swiper-pagination-fraction {
+    color: rgba(255,255,255,0.4) !important;
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    font-weight: 600;
+    bottom: 25px !important;
+    z-index: 10008;
+}
+
+/* =========================================================================
+   6Б. КІНЕМАТОГРАФІЧНІ ЕКШЕН-ФЕКТИ НА ЧИСТОМУ CSS
+   ========================================================================= */
+.action-effect-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* Пропускає кліки наскрізь */
+    z-index: 10006; /* строго ПЕРЕД фоткою батьків */
+}
+
+/* 💥 СЦЕНА 1: РОЗБИТТЯ СКЛА (Спалах + павутина тріщин через CSS-градієнт) */
+.effect-screen-shatter {
+    background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 70%),
+                repeating-conic-gradient(from 0deg, rgba(255,255,255,0.1) 0deg 15deg, rgba(255,255,255,0) 15deg 30deg);
+    animation: renderShatter 0.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+@keyframes renderShatter {
+    0% { opacity: 0; transform: scale(0.8); filter: brightness(2); }
+    15% { opacity: 1; transform: scale(1); filter: brightness(1.5); }
+    100% { opacity: 0; transform: scale(1.05); filter: brightness(1); }
+}
+
+/* 🔫 СЦЕНА 2: ГАНГСТЕРСЬКИЙ АВТОМАТ (Різкі вогняні спалахи з боків + тряска всього екрану) */
+.effect-machine-gun-fire {
+    background: linear-gradient(90deg, rgba(255,68,0,0.4) 0%, rgba(255,204,0,0) 30%),
+                linear-gradient(270deg, rgba(255,68,0,0.4) 0%, rgba(255,204,0,0) 30%);
+    animation: machineGunShoot 0.6s steps(2, start) infinite, screenShake 0.4s linear infinite;
+}
+@keyframes machineGunShoot {
+    0%, 100% { opacity: 0; filter: hue-rotate(0deg); }
+    50% { opacity: 1; filter: hue-rotate(15deg); }
+}
+@keyframes screenShake {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(-8px, 5px); }
+    40% { transform: translate(6px, -6px); }
+    60% { transform: translate(-5px, -3px); }
+    80% { transform: translate(7px, 4px); }
+    100% { transform: translate(0, 0); }
+}
+
+/* 💣 СЦЕНА 3: ТАКТИЧНИЙ ВОГНЯНИЙ ВИБУХ (Вогняна сфера, що розлітається з центру сторінки) */
+.effect-tactical-explosion {
+    background: radial-gradient(circle, #ffcc00 0%, #ff3300 40%, rgba(0,0,0,0) 70%);
+    animation: tacticalExplosionBoom 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+@keyframes tacticalExplosionBoom {
+    0% { transform: scale(0); opacity: 1; filter: blur(0px); }
+    40% { transform: scale(1.8); opacity: 0.9; filter: blur(5px); }
+    100% { transform: scale(2.5); opacity: 0; filter: blur(25px); }
+}
+
+/* 🌟 СЦЕНА 4: ЗОЛОТИЙ ДОЩ БАГАТСТВА (Падіння вертикальних золотих неонових смуг) */
+.effect-golden-rain-rich {
+    background: linear-gradient(180deg, rgba(255,215,0,0.15) 0%, rgba(255,165,0,0) 100%);
+    box-shadow: inset 0 50px 100px rgba(255,215,0,0.3);
+    animation: goldenRainPulse 0.8s ease-out forwards;
+}
+@keyframes goldenRainPulse {
+    0% { opacity: 0; backdrop-filter: brightness(1); }
+    30% { opacity: 1; backdrop-filter: brightness(1.3) saturate(1.5); }
+    100% { opacity: 0; backdrop-filter: brightness(1); }
+}
+
+/* =========================================================================
+   7. МОБІЛЬНА АДАПТАЦІЯ (MEDIA QUERIES)
+   ========================================================================= */
+@media (max-width: 768px) {
+    .hero h1 { font-size: 2.3rem; }
+    .subtitle { font-size: 1.1rem; }
+    .time-block { padding: 10px 14px; min-width: 85px; font-size: 0.75rem; }
+    .time-block span { font-size: 1.4rem; }
+    .timeline-grid { grid-template-columns: 1fr; gap: 25px; }
+    .music-player { bottom: 15px; left: 15px; padding: 8px 12px; max-width: 90%; z-index: 10001; }
+    .track-title { max-width: 95px; }
+
+    .slide-frame-container { max-width: 90vw; max-height: 65vh; padding: 10px; }
+    .swiper-button-next, .swiper-button-prev { display: none !important; }
+    .c-slider-close { top: 15px; right: 20px; font-size: 36px; }
+
+    /* Зменшуємо масштабування інтенсивних ефектів на мобільних, щоб не різало краї */
+    .lottie-fullscreen-scene lottie-player { transform: scale(1) !important; }
+}
+/* КЛАС ДЛЯ ЗАКРІПЛЕНИХ ВЕСІЛЬНИХ ФОТОКАРТОК */
+.pinned-wedding-card {
+    border: 1px solid rgba(212, 175, 55, 0.4) !important; /* золотий легкий кант художньої рами */
+    box-shadow: 0 10px 35px rgba(212, 175, 55, 0.1);
+}
+
+.pinned-wedding-card:hover {
+    box-shadow: 0 20px 45px rgba(212, 175, 55, 0.25) !important;
+}
+
+/* ЗОЛОТИЙ БЕЙДЖ "ГОЛОВНЕ" НА ФОТОГРАФІЇ */
+.wedding-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+    color: #4a3e3d;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    z-index: 10;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+}
+/* =========================================================================
+   ЗАЛІЗОБЕТОННЕ РОЗГОРТАННЯ ПАЗЛУ НА ВСЮ ВЕЛИКУ РАМУ СЛАЙДЕРА
+   ========================================================================= */
+.puzzle-mode-active {
+    position: relative;
+    /* Гарантуємо, що рама має чіткі великі розміри на екрані */
+    width: 70vw !important;
+    height: 70vh !important;
+    max-width: 500px !important;
+    max-height: 650px !important;
+    display: block !important;
+}
+
+/* Сітка жорстко розгортається на внутрішню площу білої рами */
+.real-puzzle-grid {
+    position: absolute;
+    top: 16px; /* Відступи для білого паспарту нашої рами */
+    left: 16px;
+    width: calc(100% - 32px) !important;
+    height: calc(100% - 32px) !important;
+    z-index: 10010;
+}
+
+.puzzle-piece {
+    position: absolute;
+    width: 50% !important;
+    height: 50% !important;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 10011;
+}
+
+/* Змушуємо картинки всередині шматочків займати 100% площі всієї сітки */
+.puzzle-piece img {
+    position: absolute;
+    width: calc(200% + 32px) !important;
+    height: calc(200% + 32px) !important;
+    object-fit: cover !important;
+    max-width: none !important;
+    max-height: none !important;
+}
+
+/* Координати нарізки для кожного сектора (відносний зсув всередині шматків) */
+.piece-tl { top: 0; left: 0; }
+.piece-tl img { top: -16px; left: -16px; clip-path: inset(0 50% 50% 0); }
+
+.piece-tr { top: 0; left: 50%; }
+.piece-tr img { top: -16px; left: calc(-100% - 16px); clip-path: inset(0 0 50% 50%); }
+
+.piece-bl { top: 50%; left: 0; }
+.piece-bl img { top: calc(-100% - 16px); left: -16px; clip-path: inset(50% 50% 0 0); }
+
+.piece-br { top: 50%; left: 50%; }
+.piece-br img { top: calc(-100% - 16px); left: calc(-100% - 16px); clip-path: inset(50% 0 0 50%); }
+
+/* Змішування (Тільки обертання) */
+.piece-tl.mixed { transform: rotate(90deg); }
+.piece-tr.mixed { transform: rotate(-90deg); }
+.piece-bl.mixed { transform: rotate(180deg); }
+.piece-br.mixed { transform: rotate(-180deg); }
+
+.puzzle-piece.mixed:hover {
+    filter: brightness(1.15);
+    z-index: 10012;
+}
+
+/* ПЛАШКА ПІДКАЗКИ (Ставимо її над рамою, щоб вона була чітко видима) */
+.puzzle-hint-text {
+    position: absolute;
+    top: -55px; /* виносимо НАД рамою, щоб не заважала клікати */
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(20, 20, 20, 0.85);
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    text-align: center;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10015;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Мобільна адаптація під екрани телефонів */
+@media (max-width: 768px) {
+    .puzzle-mode-active { width: 85vw !important; height: 55vh !important; }
+    .real-puzzle-grid { top: 10px; left: 10px; width: calc(100% - 20px) !important; height: calc(100% - 20px) !important; }
+    .puzzle-piece img { width: calc(200% + 20px) !important; height: calc(200% + 20px) !important; }
+    .piece-tl img { top: -10px; left: -10px; }
+    .piece-tr img { top: -10px; left: calc(-100% - 10px); }
+    .piece-bl img { top: calc(-100% - 10px); left: -10px; }
+    .piece-br img { top: calc(-100% - 10px); left: calc(-100% - 10px); }
+    .puzzle-hint-text { font-size: 0.75rem; top: -45px; padding: 6px 14px; }
+}
+/* =========================================================================
+   БАЗОВІ НАЛАШТУВАННЯ ДЛЯ ВСІХ ТИПІВ ІНТЕРАКТИВУ
+   ========================================================================= */
+.puzzle-mode-active {
+    position: relative;
+    width: 70vw !important;
+    height: 70vh !important;
+    max-width: 500px !important;
+    max-height: 650px !important;
+    display: block !important;
+    overflow: hidden;
+    background: #222;
+}
+.no-pointer { pointer-events: none; }
+.blur-heavy { filter: blur(35px) brightness(0.5) !important; }
+
+/* 1. СТИЛІ СТИРАННЯ (SCRATCH) */
+.scratch-layer {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle, #7f8c8d 0%, #34495e 100%);
+    z-index: 10020;
+    display: flex; align-items: center; justify-content: center;
+    cursor: grab;
+    transition: opacity 0.15s ease;
+}
+.scratch-text {
+    color: #fff; padding: 20px; text-align: center; font-size: 0.95rem; font-weight: 600;
+}
+
+/* 2. СТИЛІ РАДАРА / СКАНЕРА */
+.radar-lock-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 10020;
+    display: flex; align-items: center; justify-content: center;
+}
+.radar-scanner-circle {
+    width: 140px; height: 140px;
+    background: rgba(30, 144, 255, 0.2);
+    border: 3px dashed #1e90ff;
+    border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(30, 144, 255, 0.5);
+    user-select: none;
+    animation: radarPulse 2s linear infinite;
+}
+@keyframes radarPulse {
+    0% { transform: scale(1); border-color: #1e90ff; }
+    50% { transform: scale(1.05); border-color: #00bfff; box-shadow: 0 0 40px rgba(0, 191, 255, 0.8); }
+    100% { transform: scale(1); border-color: #1e90ff; }
+}
+.finger-icon { font-size: 2.2rem; margin-bottom: 5px; }
+.scan-label { color: #fff; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+
+/* 3. СТИЛІ МІНІ-ТИРУ (SHOOT) */
+.shoot-targets-container {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 10020;
+}
+.target-item {
+    position: absolute; font-size: 2.5rem; cursor: pointer;
+    user-select: none; transition: transform 0.2s ease-out;
+}
+.target-item:hover { transform: scale(1.3); }
+.item-1 { top: 25%; left: 25%; animation: targetFloat 3s ease-in-out infinite; }
+.item-2 { top: 60%; left: 70%; animation: targetFloat 3.5s ease-in-out infinite reverse; }
+.item-3 { top: 45%; left: 50%; animation: targetFloat 4s ease-in-out infinite 0.5s; }
+@keyframes targetFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+/* 4. СТИЛІ КОДОВОГО ЗАМКА */
+.digital-lock-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 10020;
+    display: flex; align-items: center; justify-content: center;
+}
+.lock-panel {
+    background: rgba(20, 20, 20, 0.9);
+    padding: 20px 25px; border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.2);
+    text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+}
+.lock-hint { color: #fff; font-size: 0.9rem; margin-bottom: 12px; font-weight: 600; }
+.lock-panel input {
+    width: 100px; background: #000; border: 2px solid #ffcc00;
+    color: #ffcc00; text-align: center; font-size: 1.5rem;
+    padding: 6px; font-family: monospace; border-radius: 6px;
+    outline: none; box-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+}
+
+/* АДАПТАЦІЯ ДЛЯ ТЕЛЕФОНІВ */
+@media (max-width: 768px) {
+    .puzzle-mode-active { width: 85vw !important; height: 55vh !important; }
+}
