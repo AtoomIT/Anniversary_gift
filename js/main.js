@@ -3,12 +3,12 @@
 let swiperInstance = null;
 let sortedGalleryData = [];
 
-// 1. Весільні закріплені фото (без інтерактиву, чистий преміум-перегляд)
+// 1. Весільні закріплені фото (УСІ ЗМЕНШЕНІ СКРИПТОМ ДО .jpg!)
 const pinnedWeddingPhotos = [
-    "Фото 72 - 2026-06-18.png", "Фото 73 - 2026-06-18.png", "Фото 74 - 2026-06-18.png",
-    "Фото 75 - 2026-06-18.png", "Фото 76 - 2026-06-18.png", "Фото 77 - 2026-06-18.png",
-    "Фото 78 - 2026-06-18.png", "Фото 79 - 2026-06-18.png", "Фото 80 - 2026-06-18.png",
-    "Фото 81 - 2026-06-18.png", "Фото 82 - 2026-06-18.png"
+    "Фото 72 - 2026-06-18.jpg", "Фото 73 - 2026-06-18.jpg", "Фото 74 - 2026-06-18.jpg",
+    "Фото 75 - 2026-06-18.jpg", "Фото 76 - 2026-06-18.jpg", "Фото 77 - 2026-06-18.jpg",
+    "Фото 78 - 2026-06-18.jpg", "Фото 79 - 2026-06-18.jpg", "Фото 80 - 2026-06-18.jpg",
+    "Фото 81 - 2026-06-18.jpg", "Фото 82 - 2026-06-18.jpg"
 ];
 
 // Карта квестів: filename -> тип квесту
@@ -57,7 +57,7 @@ function generateAllQuests() {
 
     const types = ["scratch", "radar", "shoot", "lock"];
     selected.forEach((photo, i) => {
-        const questType = types[i % types.length]; // Циклічно даємо типи
+        const questType = types[i % types.length];
         activeQuests[photo.filename] = questType;
     });
 }
@@ -111,7 +111,6 @@ function prepareAndRenderGallery() {
     });
 }
 
-// Генератор HTML-структури для кожного з 5 інтерактивів
 function generateQuestHTML(type, filename, index) {
     switch(type) {
         case "puzzle":
@@ -159,7 +158,6 @@ function generateQuestHTML(type, filename, index) {
                 </div>`;
 
         case "lock":
-            // Витягуємо реальний рік з назви файлу для коду замка
             const match = filename.match(/\d{4}/);
             const correctYear = match ? match[0] : "2000";
             return `
@@ -175,11 +173,6 @@ function generateQuestHTML(type, filename, index) {
     }
 }
 
-// =========================================================================
-// ІГРОВА ЛОГІКА МЕХАНІК
-// =========================================================================
-
-// 1. Логіка Пазлу
 window.rotatePiece = function(element, filename, slideIndex, position) {
     if (!element.classList.contains("mixed")) return;
     element.classList.remove("mixed");
@@ -187,29 +180,20 @@ window.rotatePiece = function(element, filename, slideIndex, position) {
     if (!puzzleProgress[filename]) puzzleProgress[filename] = { tl: false, tr: false, bl: false, br: false };
     puzzleProgress[filename][position] = true;
     const prog = puzzleProgress[filename];
-    if (prog.tl && prog.tr && prog.bl && prog.br) {
-        completeQuest(filename, slideIndex);
-    }
+    if (prog.tl && prog.tr && prog.bl && prog.br) { completeQuest(filename, slideIndex); }
 };
 
-// 2. Логіка Стирання (Scratch)
 window.scratchMove = function(element, filename, slideIndex) {
     if (!element.opacityCounter) element.opacityCounter = 100;
-    element.opacityCounter -= 0.8; // поступово "протираємо"
+    element.opacityCounter -= 0.8;
     element.style.opacity = element.opacityCounter / 100;
-    if (element.opacityCounter <= 15) {
-        element.remove();
-        completeQuest(filename, slideIndex);
-    }
+    if (element.opacityCounter <= 15) { element.remove(); completeQuest(filename, slideIndex); }
 };
 
-// 3. Логіка Радара / Утримання кнопки
 window.startRadarScan = function(filename, slideIndex) {
     const label = event.currentTarget.querySelector(".scan-label");
     if (label) label.textContent = "Сканування...";
-    holdTimers[filename] = setTimeout(() => {
-        completeQuest(filename, slideIndex);
-    }, 2000); // 2 секунди утримання
+    holdTimers[filename] = setTimeout(() => { completeQuest(filename, slideIndex); }, 2000);
 };
 window.stopRadarScan = function(filename) {
     clearTimeout(holdTimers[filename]);
@@ -217,25 +201,17 @@ window.stopRadarScan = function(filename) {
     if (label) label.textContent = "Затисніть на 2 сек";
 };
 
-// 4. Логіка Міні-Тиру
 window.shootTarget = function(element, filename, slideIndex) {
     element.style.transform = "scale(0)";
     setTimeout(() => element.remove(), 200);
     const container = document.getElementById(`quest-track-${slideIndex}`);
-    if (container && container.querySelectorAll(".target-item").length <= 1) {
-        completeQuest(filename, slideIndex);
-    }
+    if (container && container.querySelectorAll(".target-item").length <= 1) { completeQuest(filename, slideIndex); }
 };
 
-// 5. Логіка Кодового Замка
 window.checkDigitalLock = function(inputEl, correctYear, filename, slideIndex) {
-    if (inputEl.value === correctYear) {
-        inputEl.blur();
-        completeQuest(filename, slideIndex);
-    }
+    if (inputEl.value === correctYear) { inputEl.blur(); completeQuest(filename, slideIndex); }
 };
 
-// Фіналізатор квесту
 function completeQuest(filename, slideIndex) {
     unlockedQuests[filename] = true;
     const container = document.getElementById(`quest-track-${slideIndex}`);
@@ -247,9 +223,6 @@ function completeQuest(filename, slideIndex) {
     triggerWeaponLaserFire();
 }
 
-// =========================================================================
-// ПЛАТФОРМА ЕФЕКТІВ ТА СЛАЙДЕРА
-// =========================================================================
 function openSlider(index) {
     document.getElementById("custom-slider-overlay").classList.add("active");
     document.body.style.overflow = "hidden";
@@ -279,9 +252,7 @@ function runHollywoodShow() {
     const oldEffects = document.querySelectorAll(".action-effect-layer");
     oldEffects.forEach(el => el.remove());
 
-    if (activeQuests[currentPhoto.filename] && !unlockedQuests[currentPhoto.filename]) {
-        return;
-    }
+    if (activeQuests[currentPhoto.filename] && !unlockedQuests[currentPhoto.filename]) { return; }
 
     const sceneType = currentIdx % 4;
     const effectNode = document.createElement("div");
