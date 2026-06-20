@@ -13,7 +13,7 @@ const pinnedWeddingPhotos = [
 
 // Карта квестів: filename -> тип квесту
 let activeQuests = {
-    "Фото 6 - 2008-06-25.jpg": "puzzle" // Фото 6 залізобетонно з пазлом
+    "Фото 6 - 2008-06-25.jpg": "puzzle"
 };
 let unlockedQuests = {};
 
@@ -44,7 +44,6 @@ function updateCountdown() {
     }
 }
 
-// Розподіляємо 15 квестів по 4 нових механіках
 function generateAllQuests() {
     if (typeof galleryData === "undefined") return;
 
@@ -53,7 +52,7 @@ function generateAllQuests() {
     );
 
     const shuffled = [...available].sort(() => 0.5 - Math.random());
-    const selected = shuffled.slice(0, 15); // Беремо рівно 15 фотографій
+    const selected = shuffled.slice(0, 15);
 
     const types = ["scratch", "radar", "shoot", "lock"];
     selected.forEach((photo, i) => {
@@ -69,8 +68,15 @@ function prepareAndRenderGallery() {
 
     generateAllQuests();
 
+    // Відокремлюємо весільні фото
     const weddingPart = galleryData.filter(photo => pinnedWeddingPhotos.includes(photo.filename));
-    const archivePart = galleryData.filter(photo => !pinnedWeddingPhotos.includes(photo.filename));
+
+    // Архівні фото сортуємо НАВПАКИ (від нових 2026 року до старих)
+    const archivePart = galleryData
+        .filter(photo => !pinnedWeddingPhotos.includes(photo.filename))
+        .reverse(); // Перевертаємо порядок масиву
+
+    // Об'єднуємо: спочатку весільні, потім архів від нових до старих
     sortedGalleryData = [...weddingPart, ...archivePart];
 
     timelineElement.innerHTML = "";
@@ -80,7 +86,6 @@ function prepareAndRenderGallery() {
         const isWedding = pinnedWeddingPhotos.includes(photo.filename);
         const questType = activeQuests[photo.filename];
 
-        // Рендер плитки головної сторінки
         const card = document.createElement("div");
         card.className = isWedding ? "photo-card pinned-wedding-card" : "photo-card";
         card.innerHTML = `
@@ -94,7 +99,6 @@ function prepareAndRenderGallery() {
         card.addEventListener("click", () => openSlider(index));
         timelineElement.appendChild(card);
 
-        // Рендер слайдів для Swiper
         const swiperSlide = document.createElement("div");
         swiperSlide.className = "swiper-slide";
 
@@ -111,7 +115,6 @@ function prepareAndRenderGallery() {
     });
 }
 
-// Генератор HTML-структури для кожного з 5 інтерактивів
 function generateQuestHTML(type, filename, index) {
     switch(type) {
         case "puzzle":
@@ -172,11 +175,6 @@ function generateQuestHTML(type, filename, index) {
     }
 }
 
-// =========================================================================
-// ІГРОВА ЛОГІКА МЕХАНІК
-// =========================================================================
-
-// 1. Логіка Пазлу
 window.rotatePiece = function(element, filename, slideIndex, position) {
     if (!element.classList.contains("mixed")) return;
     element.classList.remove("mixed");
@@ -184,29 +182,20 @@ window.rotatePiece = function(element, filename, slideIndex, position) {
     if (!puzzleProgress[filename]) puzzleProgress[filename] = { tl: false, tr: false, bl: false, br: false };
     puzzleProgress[filename][position] = true;
     const prog = puzzleProgress[filename];
-    if (prog.tl && prog.tr && prog.bl && prog.br) {
-        completeQuest(filename, slideIndex);
-    }
+    if (prog.tl && prog.tr && prog.bl && prog.br) { completeQuest(filename, slideIndex); }
 };
 
-// 2. Логіка Стирання (Scratch)
 window.scratchMove = function(element, filename, slideIndex) {
     if (!element.opacityCounter) element.opacityCounter = 100;
     element.opacityCounter -= 0.8;
     element.style.opacity = element.opacityCounter / 100;
-    if (element.opacityCounter <= 15) {
-        element.remove();
-        completeQuest(filename, slideIndex);
-    }
+    if (element.opacityCounter <= 15) { element.remove(); completeQuest(filename, slideIndex); }
 };
 
-// 3. Логіка Радара / Утримання кнопки
 window.startRadarScan = function(filename, slideIndex) {
     const label = event.currentTarget.querySelector(".scan-label");
     if (label) label.textContent = "Сканування...";
-    holdTimers[filename] = setTimeout(() => {
-        completeQuest(filename, slideIndex);
-    }, 2000);
+    holdTimers[filename] = setTimeout(() => { completeQuest(filename, slideIndex); }, 2000);
 };
 window.stopRadarScan = function(filename) {
     clearTimeout(holdTimers[filename]);
@@ -214,35 +203,26 @@ window.stopRadarScan = function(filename) {
     if (label) label.textContent = "Затисніть на 2 сек";
 };
 
-// 4. Логіка Міні-Тиру
 window.shootTarget = function(element, filename, slideIndex) {
     element.style.transform = "scale(0)";
     setTimeout(() => element.remove(), 200);
     const container = document.getElementById(`quest-track-${slideIndex}`);
-    if (container && container.querySelectorAll(".target-item").length <= 1) {
-        completeQuest(filename, slideIndex);
-    }
+    if (container && container.querySelectorAll(".target-item").length <= 1) { completeQuest(filename, slideIndex); }
 };
 
-// 5. Логіка Кодового Замка (Головний сімейний пароль)
 window.checkWeddingDateLock = function(inputEl, filename, slideIndex) {
     let value = inputEl.value.replace(/\D/g, '');
-
-    // Автоматично додаємо крапки під час введення (формат ДД.ММ.РРРР)
     if (value.length > 2 && value.length <= 4) {
         inputEl.value = value.slice(0, 2) + '.' + value.slice(2);
     } else if (value.length > 4) {
         inputEl.value = value.slice(0, 2) + '.' + value.slice(2, 4) + '.' + value.slice(4, 8);
     }
-
-    // Перевірка секретної дати
     if (inputEl.value === "20.06.1998") {
         inputEl.blur();
         completeQuest(filename, slideIndex);
     }
 };
 
-// Фіналізатор квесту
 function completeQuest(filename, slideIndex) {
     unlockedQuests[filename] = true;
     const container = document.getElementById(`quest-track-${slideIndex}`);
@@ -254,9 +234,6 @@ function completeQuest(filename, slideIndex) {
     triggerWeaponLaserFire();
 }
 
-// =========================================================================
-// ПЛАТФОРМА ЕФЕКТІВ ТА СЛАЙДЕРА
-// =========================================================================
 function openSlider(index) {
     document.getElementById("custom-slider-overlay").classList.add("active");
     document.body.style.overflow = "hidden";
@@ -286,9 +263,7 @@ function runHollywoodShow() {
     const oldEffects = document.querySelectorAll(".action-effect-layer");
     oldEffects.forEach(el => el.remove());
 
-    if (activeQuests[currentPhoto.filename] && !unlockedQuests[currentPhoto.filename]) {
-        return;
-    }
+    if (activeQuests[currentPhoto.filename] && !unlockedQuests[currentPhoto.filename]) { return; }
 
     const sceneType = currentIdx % 4;
     const effectNode = document.createElement("div");
@@ -330,26 +305,42 @@ function closeSlider() {
     oldEffects.forEach(el => el.remove());
 }
 
+// ПАДАЮЧІ СЕРДЕЧКА, ЗІРОЧКИ ТА ІМЕНА БАТЬКІВ
 function createFallingHearts() {
     const mainContainer = document.getElementById("falling-hearts-container");
     const sliderOverlay = document.getElementById("custom-slider-overlay");
     if (!mainContainer || !sliderOverlay) return;
-    const items = ['❤️', '✨', '🌸', '💖'];
+
+    // Додали імена батьків у потік падаючих елементів!
+    const items = ['❤️', '✨', '🌸', '💖', 'Людмила', 'Андрій'];
+
     setInterval(() => {
         const item = document.createElement("div");
         item.className = "falling-item";
-        item.textContent = items[Math.floor(Math.random() * items.length)];
+        const selected = items[Math.floor(Math.random() * items.length)];
+        item.textContent = selected;
+
+        // Якщо це текст-ім'я, стилізуємо його красивіше
+        if (selected === 'Людмила' || selected === 'Андрій') {
+            item.style.color = '#ffcc00';
+            item.style.fontWeight = 'bold';
+            item.style.textShadow = '0 0 8px rgba(255, 204, 0, 0.6)';
+            item.style.fontSize = "14px";
+        } else {
+            item.style.fontSize = Math.random() * 14 + 12 + "px";
+        }
+
         item.style.left = Math.random() * 100 + "vw";
-        item.style.fontSize = Math.random() * 14 + 12 + "px";
-        item.style.animationDuration = Math.random() * 5 + 4 + "s";
-        item.style.opacity = Math.random() * 0.25 + 0.15;
+        item.style.animationDuration = Math.random() * 5 + 5 + "s"; // трохи плавніше падіння
+        item.style.opacity = Math.random() * 0.35 + 0.2;
+
         if (sliderOverlay.classList.contains("active")) {
             item.style.zIndex = "10004"; sliderOverlay.appendChild(item);
         } else {
             item.style.zIndex = "1"; mainContainer.appendChild(item);
         }
-        setTimeout(() => { item.remove(); }, 7500);
-    }, 450);
+        setTimeout(() => { item.remove(); }, 9000);
+    }, 550);
 }
 
 const playlist = [

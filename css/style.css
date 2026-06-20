@@ -10,12 +10,12 @@
 }
 
 body {
-    font-family: 'Montserrat', sans-serif;
-    background-color: #faf6f0; /* Ніжний кремовий відтінок замість сухого білого */
-    color: #3e3535;
-    line-height: 1.6;
+    background: #09070f linear-gradient(135deg, #09070f 0%, #130d22 50%, #08050e 100%) !important;
+    color: #f1ecfc !important;
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
     overflow-x: hidden;
-    position: relative;
 }
 
 .container {
@@ -97,11 +97,15 @@ body {
 }
 
 .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 4.2rem;
-    margin-bottom: 12px;
-    font-weight: 600;
-    text-shadow: 2px 4px 15px rgba(0,0,0,0.3);
+    font-family: 'Georgia', serif;
+    font-size: 3rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    background: linear-gradient(45deg, #ffffff 30%, #e2b4bd 70%, #ffcc00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0px 4px 20px rgba(138, 43, 226, 0.15);
+    margin-bottom: 5px;
 }
 
 .subtitle {
@@ -120,29 +124,24 @@ body {
     margin-top: 25px;
 }
 
-.time-block {
-    background: rgba(255, 255, 255, 0.16);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    padding: 16px 24px;
-    border-radius: 16px;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    min-width: 130px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    color: #fff;
-    transition: transform 0.3s ease;
+.countdown-container {
+    background: rgba(20, 15, 35, 0.6) !important;
+    border: 1px solid rgba(138, 43, 226, 0.25) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), 0 0 15px rgba(138, 43, 226, 0.2) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border-radius: 16px !important;
+    padding: 20px !important;
+    margin: 25px auto !important;
 }
-.time-block:hover { transform: scale(1.04); }
 
 .time-block span {
     display: block;
     font-size: 2.4rem;
     font-weight: 600;
-    color: #fff;
     margin-bottom: 2px;
+    color: #ffcc00 !important; /* Яскраві неонові цифри */
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.5) !important;
 }
 
 /* =========================================================================
@@ -177,18 +176,19 @@ body {
 
 /* ПАСПАРТУ-РАМОЧКА ДЛЯ КОЖНОЇ ФОТОГРАФІЇ */
 .photo-card {
-    background: #fff;
-    padding: 16px; /* Біле вишукане паспарту навколо кадру */
-    border-radius: 4px; /* Класичний кут художньої рами */
-    box-shadow: 0 10px 30px rgba(74, 62, 61, 0.07);
-    border: 1px solid rgba(74, 62, 61, 0.06);
-    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
+    background: rgba(25, 18, 44, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    padding: 16px;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease !important;
     cursor: zoom-in;
 }
 
 .photo-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 45px rgba(74, 62, 61, 0.15);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(138, 43, 226, 0.3), 0 0 10px rgba(255, 204, 0, 0.1) !important;
+    border-color: rgba(138, 43, 226, 0.4) !important;
 }
 
 .photo-wrapper {
@@ -296,7 +296,7 @@ footer {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(135deg, #2c1116 0%, #120507 50%, #050102 100%);
+    background: radial-gradient(circle at 85% 15%, rgba(199, 44, 119, 0.12) 0%, rgba(15, 10, 25, 0.98) 75%) !important;
     z-index: 10000;
     display: none;
     align-items: center;
@@ -487,8 +487,8 @@ footer {
 }
 /* КЛАС ДЛЯ ЗАКРІПЛЕНИХ ВЕСІЛЬНИХ ФОТОКАРТОК */
 .pinned-wedding-card {
-    border: 1px solid rgba(212, 175, 55, 0.4) !important; /* золотий легкий кант художньої рами */
-    box-shadow: 0 10px 35px rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(255, 204, 0, 0.3) !important;
+    box-shadow: 0 0 15px rgba(255, 204, 0, 0.15) !important;
 }
 
 .pinned-wedding-card:hover {
@@ -500,10 +500,10 @@ footer {
     position: absolute;
     top: 12px;
     left: 12px;
-    background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
-    color: #4a3e3d;
+    background: linear-gradient(45deg, #ffcc00, #ff9900) !important;
+    color: #000 !important;
+    font-weight: bold !important;
     font-size: 0.7rem;
-    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
     padding: 4px 10px;
