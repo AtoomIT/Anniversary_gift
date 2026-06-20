@@ -166,9 +166,16 @@ function generateQuestHTML(type, filename, index) {
                         <div class="lock-panel">
                             <div class="lock-hint">Введіть рік цього знімка:</div>
                             <input type="text" maxlength="4" placeholder="????" id="lock-input-${index}" oninput="checkDigitalLock(this, '${correctYear}', '${filename}', ${index})">
+                            <div class="view-photo-btn"
+                                 onmousedown="document.getElementById('quest-track-${index}').classList.add('peek-photo')"
+                                 onmouseup="document.getElementById('quest-track-${index}').classList.remove('peek-photo')"
+                                 ontouchstart="document.getElementById('quest-track-${index}').classList.add('peek-photo')"
+                                 ontouchend="document.getElementById('quest-track-${index}').classList.remove('peek-photo')">
+                                 👁️ Утримуйте, щоб підглянути
+                            </div>
                         </div>
                     </div>
-                    <img src="images/gallery/${filename}" class="slide-main-img blur-heavy">
+                    <img src="images/gallery/${filename}" class="slide-main-img blur-heavy target-blur-img">
                 </div>`;
     }
 }

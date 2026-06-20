@@ -709,3 +709,28 @@ footer {
 @media (max-width: 768px) {
     .puzzle-mode-active { width: 85vw !important; height: 55vh !important; }
 }
+/* Кнопка підглядання фотографії в кодовому замку */
+.view-photo-btn {
+    margin-top: 12px;
+    background: #444;
+    color: #fff;
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.view-photo-btn:hover { background: #555; }
+
+/* Магія підглядання: ховаємо замок і прибираємо блюр з картинки */
+.peek-photo .digital-lock-overlay {
+    opacity: 0 !important;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+.peek-photo .target-blur-img {
+    filter: none !important;
+    transition: filter 0.2s ease;
+}
