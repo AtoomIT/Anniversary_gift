@@ -3,7 +3,7 @@
 let swiperInstance = null;
 let sortedGalleryData = [];
 
-// 1. Весільні закріплені фото (УСІ ЗМЕНШЕНІ СКРИПТОМ ДО .jpg!)
+// 1. Весільні закріплені фото (Усі оптимізовані скриптом до .jpg)
 const pinnedWeddingPhotos = [
     "Фото 72 - 2026-06-18.jpg", "Фото 73 - 2026-06-18.jpg", "Фото 74 - 2026-06-18.jpg",
     "Фото 75 - 2026-06-18.jpg", "Фото 76 - 2026-06-18.jpg", "Фото 77 - 2026-06-18.jpg",
@@ -80,7 +80,7 @@ function prepareAndRenderGallery() {
         const isWedding = pinnedWeddingPhotos.includes(photo.filename);
         const questType = activeQuests[photo.filename];
 
-        // Рендер плитки
+        // Рендер плитки головної сторінки
         const card = document.createElement("div");
         card.className = isWedding ? "photo-card pinned-wedding-card" : "photo-card";
         card.innerHTML = `
@@ -111,6 +111,7 @@ function prepareAndRenderGallery() {
     });
 }
 
+// Генератор HTML-структури для кожного з 5 інтерактивів
 function generateQuestHTML(type, filename, index) {
     switch(type) {
         case "puzzle":
@@ -158,28 +159,24 @@ function generateQuestHTML(type, filename, index) {
                 </div>`;
 
         case "lock":
-            const match = filename.match(/\d{4}/);
-            const correctYear = match ? match[0] : "2000";
             return `
                 <div class="slide-frame-container puzzle-mode-active" id="quest-track-${index}">
                     <div class="digital-lock-overlay">
                         <div class="lock-panel">
-                            <div class="lock-hint">Введіть рік цього знімка:</div>
-                            <input type="text" maxlength="4" placeholder="????" id="lock-input-${index}" oninput="checkDigitalLock(this, '${correctYear}', '${filename}', ${index})">
-                            <div class="view-photo-btn"
-                                 onmousedown="document.getElementById('quest-track-${index}').classList.add('peek-photo')"
-                                 onmouseup="document.getElementById('quest-track-${index}').classList.remove('peek-photo')"
-                                 ontouchstart="document.getElementById('quest-track-${index}').classList.add('peek-photo')"
-                                 ontouchend="document.getElementById('quest-track-${index}').classList.remove('peek-photo')">
-                                 👁️ Утримуйте, щоб підглянути
-                            </div>
+                            <div class="lock-hint">Введіть дату вашого весілля:</div>
+                            <input type="text" maxlength="10" placeholder="ДД.ММ.РРРР" id="lock-input-${index}" oninput="checkWeddingDateLock(this, '${filename}', ${index})">
                         </div>
                     </div>
-                    <img src="images/gallery/${filename}" class="slide-main-img blur-heavy target-blur-img">
+                    <img src="images/gallery/${filename}" class="slide-main-img blur-heavy">
                 </div>`;
     }
 }
 
+// =========================================================================
+// ІГРОВА ЛОГІКА МЕХАНІК
+// =========================================================================
+
+// 1. Логіка Пазлу
 window.rotatePiece = function(element, filename, slideIndex, position) {
     if (!element.classList.contains("mixed")) return;
     element.classList.remove("mixed");
@@ -187,20 +184,29 @@ window.rotatePiece = function(element, filename, slideIndex, position) {
     if (!puzzleProgress[filename]) puzzleProgress[filename] = { tl: false, tr: false, bl: false, br: false };
     puzzleProgress[filename][position] = true;
     const prog = puzzleProgress[filename];
-    if (prog.tl && prog.tr && prog.bl && prog.br) { completeQuest(filename, slideIndex); }
+    if (prog.tl && prog.tr && prog.bl && prog.br) {
+        completeQuest(filename, slideIndex);
+    }
 };
 
+// 2. Логіка Стирання (Scratch)
 window.scratchMove = function(element, filename, slideIndex) {
     if (!element.opacityCounter) element.opacityCounter = 100;
     element.opacityCounter -= 0.8;
     element.style.opacity = element.opacityCounter / 100;
-    if (element.opacityCounter <= 15) { element.remove(); completeQuest(filename, slideIndex); }
+    if (element.opacityCounter <= 15) {
+        element.remove();
+        completeQuest(filename, slideIndex);
+    }
 };
 
+// 3. Логіка Радара / Утримання кнопки
 window.startRadarScan = function(filename, slideIndex) {
     const label = event.currentTarget.querySelector(".scan-label");
     if (label) label.textContent = "Сканування...";
-    holdTimers[filename] = setTimeout(() => { completeQuest(filename, slideIndex); }, 2000);
+    holdTimers[filename] = setTimeout(() => {
+        completeQuest(filename, slideIndex);
+    }, 2000);
 };
 window.stopRadarScan = function(filename) {
     clearTimeout(holdTimers[filename]);
@@ -208,17 +214,35 @@ window.stopRadarScan = function(filename) {
     if (label) label.textContent = "Затисніть на 2 сек";
 };
 
+// 4. Логіка Міні-Тиру
 window.shootTarget = function(element, filename, slideIndex) {
     element.style.transform = "scale(0)";
     setTimeout(() => element.remove(), 200);
     const container = document.getElementById(`quest-track-${slideIndex}`);
-    if (container && container.querySelectorAll(".target-item").length <= 1) { completeQuest(filename, slideIndex); }
+    if (container && container.querySelectorAll(".target-item").length <= 1) {
+        completeQuest(filename, slideIndex);
+    }
 };
 
-window.checkDigitalLock = function(inputEl, correctYear, filename, slideIndex) {
-    if (inputEl.value === correctYear) { inputEl.blur(); completeQuest(filename, slideIndex); }
+// 5. Логіка Кодового Замка (Головний сімейний пароль)
+window.checkWeddingDateLock = function(inputEl, filename, slideIndex) {
+    let value = inputEl.value.replace(/\D/g, '');
+
+    // Автоматично додаємо крапки під час введення (формат ДД.ММ.РРРР)
+    if (value.length > 2 && value.length <= 4) {
+        inputEl.value = value.slice(0, 2) + '.' + value.slice(2);
+    } else if (value.length > 4) {
+        inputEl.value = value.slice(0, 2) + '.' + value.slice(2, 4) + '.' + value.slice(4, 8);
+    }
+
+    // Перевірка секретної дати
+    if (inputEl.value === "20.06.1998") {
+        inputEl.blur();
+        completeQuest(filename, slideIndex);
+    }
 };
 
+// Фіналізатор квесту
 function completeQuest(filename, slideIndex) {
     unlockedQuests[filename] = true;
     const container = document.getElementById(`quest-track-${slideIndex}`);
@@ -230,6 +254,9 @@ function completeQuest(filename, slideIndex) {
     triggerWeaponLaserFire();
 }
 
+// =========================================================================
+// ПЛАТФОРМА ЕФЕКТІВ ТА СЛАЙДЕРА
+// =========================================================================
 function openSlider(index) {
     document.getElementById("custom-slider-overlay").classList.add("active");
     document.body.style.overflow = "hidden";
@@ -259,7 +286,9 @@ function runHollywoodShow() {
     const oldEffects = document.querySelectorAll(".action-effect-layer");
     oldEffects.forEach(el => el.remove());
 
-    if (activeQuests[currentPhoto.filename] && !unlockedQuests[currentPhoto.filename]) { return; }
+    if (activeQuests[currentPhoto.filename] && !unlockedQuests[currentPhoto.filename]) {
+        return;
+    }
 
     const sceneType = currentIdx % 4;
     const effectNode = document.createElement("div");

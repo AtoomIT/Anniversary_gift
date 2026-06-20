@@ -513,22 +513,33 @@ footer {
     border: 1px solid rgba(255,255,255,0.3);
 }
 /* =========================================================================
-   ЗАЛІЗОБЕТОННЕ РОЗГОРТАННЯ ПАЗЛУ НА ВСЮ ВЕЛИКУ РАМУ СЛАЙДЕРА
+   ГЛОБАЛЬНІ НАЛАШТУВАННЯ ДЛЯ ВСІХ ТИПІВ КВЕСТ-ІГОР
    ========================================================================= */
 .puzzle-mode-active {
-    position: relative;
-    /* Гарантуємо, що рама має чіткі великі розміри на екрані */
+    position: relative !important;
     width: 70vw !important;
     height: 70vh !important;
     max-width: 500px !important;
     max-height: 650px !important;
     display: block !important;
+    overflow: hidden !important;
+    background: #222 !important;
 }
 
-/* Сітка жорстко розгортається на внутрішню площу білої рами */
+.no-pointer {
+    pointer-events: none !important;
+}
+
+.blur-heavy {
+    filter: blur(35px) brightness(0.5) !important;
+}
+
+/* =========================================================================
+   1. МЕХАНІКА: СУВОРІШИЙ ПАЗЛ НА 4 ЧАСТИНИ
+   ========================================================================= */
 .real-puzzle-grid {
     position: absolute;
-    top: 16px; /* Відступи для білого паспарту нашої рами */
+    top: 16px; /* Відступи для внутрішнього білого паспарту рами */
     left: 16px;
     width: calc(100% - 32px) !important;
     height: calc(100% - 32px) !important;
@@ -545,7 +556,6 @@ footer {
     z-index: 10011;
 }
 
-/* Змушуємо картинки всередині шматочків займати 100% площі всієї сітки */
 .puzzle-piece img {
     position: absolute;
     width: calc(200% + 32px) !important;
@@ -555,20 +565,20 @@ footer {
     max-height: none !important;
 }
 
-/* Координати нарізки для кожного сектора (відносний зсув всередині шматків) */
+/* Точна географічна нарізка секторів */
 .piece-tl { top: 0; left: 0; }
-.piece-tl img { top: -16px; left: -16px; clip-path: inset(0 50% 50% 0); }
+.piece-tl img { top: -16px; left: -16px; }
 
 .piece-tr { top: 0; left: 50%; }
-.piece-tr img { top: -16px; left: calc(-100% - 16px); clip-path: inset(0 0 50% 50%); }
+.piece-tr img { top: -16px; left: calc(-100% - 16px); }
 
 .piece-bl { top: 50%; left: 0; }
-.piece-bl img { top: calc(-100% - 16px); left: -16px; clip-path: inset(50% 50% 0 0); }
+.piece-bl img { top: calc(-100% - 16px); left: -16px; }
 
 .piece-br { top: 50%; left: 50%; }
-.piece-br img { top: calc(-100% - 16px); left: calc(-100% - 16px); clip-path: inset(50% 0 0 50%); }
+.piece-br img { top: calc(-100% - 16px); left: calc(-100% - 16px); }
 
-/* Змішування (Тільки обертання) */
+/* Стан хаотичного початкового змішування */
 .piece-tl.mixed { transform: rotate(90deg); }
 .piece-tr.mixed { transform: rotate(-90deg); }
 .piece-bl.mixed { transform: rotate(180deg); }
@@ -579,10 +589,10 @@ footer {
     z-index: 10012;
 }
 
-/* ПЛАШКА ПІДКАЗКИ (Ставимо її над рамою, щоб вона була чітко видима) */
+/* Плашка текстової підказки для пазлу */
 .puzzle-hint-text {
     position: absolute;
-    top: -55px; /* виносимо НАД рамою, щоб не заважала клікати */
+    top: -55px; /* Винесено НАД рамою, щоб не перекривати зони кліків */
     left: 50%;
     transform: translateX(-50%);
     background: rgba(20, 20, 20, 0.85);
@@ -598,34 +608,9 @@ footer {
     border: 1px solid rgba(255,255,255,0.1);
 }
 
-/* Мобільна адаптація під екрани телефонів */
-@media (max-width: 768px) {
-    .puzzle-mode-active { width: 85vw !important; height: 55vh !important; }
-    .real-puzzle-grid { top: 10px; left: 10px; width: calc(100% - 20px) !important; height: calc(100% - 20px) !important; }
-    .puzzle-piece img { width: calc(200% + 20px) !important; height: calc(200% + 20px) !important; }
-    .piece-tl img { top: -10px; left: -10px; }
-    .piece-tr img { top: -10px; left: calc(-100% - 10px); }
-    .piece-bl img { top: calc(-100% - 10px); left: -10px; }
-    .piece-br img { top: calc(-100% - 10px); left: calc(-100% - 10px); }
-    .puzzle-hint-text { font-size: 0.75rem; top: -45px; padding: 6px 14px; }
-}
 /* =========================================================================
-   БАЗОВІ НАЛАШТУВАННЯ ДЛЯ ВСІХ ТИПІВ ІНТЕРАКТИВУ
+   2. МЕХАНІКА: СТИРАННЯ КВИТКА (SCRATCH)
    ========================================================================= */
-.puzzle-mode-active {
-    position: relative;
-    width: 70vw !important;
-    height: 70vh !important;
-    max-width: 500px !important;
-    max-height: 650px !important;
-    display: block !important;
-    overflow: hidden;
-    background: #222;
-}
-.no-pointer { pointer-events: none; }
-.blur-heavy { filter: blur(35px) brightness(0.5) !important; }
-
-/* 1. СТИЛІ СТИРАННЯ (SCRATCH) */
 .scratch-layer {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -635,17 +620,21 @@ footer {
     cursor: grab;
     transition: opacity 0.15s ease;
 }
+
 .scratch-text {
-    color: #fff; padding: 20px; text-align: center; font-size: 0.95rem; font-weight: 600;
+    color: #fff; padding: 20px; text-align: center; font-size: 0.95rem; font-weight: 600; line-height: 1.4;
 }
 
-/* 2. СТИЛІ РАДАРА / СКАНЕРА */
+/* =========================================================================
+   3. МЕХАНІКА: ЛАЗЕРНИЙ СЕКРЕТНИЙ СКАНЕР (RADAR)
+   ========================================================================= */
 .radar-lock-overlay {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
     z-index: 10020;
     display: flex; align-items: center; justify-content: center;
 }
+
 .radar-scanner-circle {
     width: 140px; height: 140px;
     background: rgba(30, 144, 255, 0.2);
@@ -657,80 +646,100 @@ footer {
     user-select: none;
     animation: radarPulse 2s linear infinite;
 }
+
 @keyframes radarPulse {
     0% { transform: scale(1); border-color: #1e90ff; }
     50% { transform: scale(1.05); border-color: #00bfff; box-shadow: 0 0 40px rgba(0, 191, 255, 0.8); }
     100% { transform: scale(1); border-color: #1e90ff; }
 }
+
 .finger-icon { font-size: 2.2rem; margin-bottom: 5px; }
 .scan-label { color: #fff; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
 
-/* 3. СТИЛІ МІНІ-ТИРУ (SHOOT) */
+/* =========================================================================
+   4. МЕХАНІКА: МІНІ-ТИР / ВЛУЧ ПO ЦІЛЯХ (SHOOT)
+   ========================================================================= */
 .shoot-targets-container {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
     z-index: 10020;
 }
+
 .target-item {
     position: absolute; font-size: 2.5rem; cursor: pointer;
     user-select: none; transition: transform 0.2s ease-out;
 }
+
 .target-item:hover { transform: scale(1.3); }
 .item-1 { top: 25%; left: 25%; animation: targetFloat 3s ease-in-out infinite; }
 .item-2 { top: 60%; left: 70%; animation: targetFloat 3.5s ease-in-out infinite reverse; }
 .item-3 { top: 45%; left: 50%; animation: targetFloat 4s ease-in-out infinite 0.5s; }
+
 @keyframes targetFloat {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-15px); }
 }
 
-/* 4. СТИЛІ КОДОВОГО ЗАМКА */
+/* =========================================================================
+   5. МЕХАНІКА: СЕЙФ / ДАТА ВЕСІЛЛЯ (LOCK)
+   ========================================================================= */
 .digital-lock-overlay {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
     z-index: 10020;
     display: flex; align-items: center; justify-content: center;
 }
+
 .lock-panel {
     background: rgba(20, 20, 20, 0.9);
     padding: 20px 25px; border-radius: 14px;
     border: 1px solid rgba(255,255,255,0.2);
     text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.5);
 }
+
 .lock-hint { color: #fff; font-size: 0.9rem; margin-bottom: 12px; font-weight: 600; }
+
 .lock-panel input {
-    width: 100px; background: #000; border: 2px solid #ffcc00;
-    color: #ffcc00; text-align: center; font-size: 1.5rem;
+    width: 160px; /* Ідеальний розмір під 10 символів ДД.ММ.РРРР */
+    background: #000; border: 2px solid #ffcc00;
+    color: #ffcc00; text-align: center; font-size: 1.3rem;
     padding: 6px; font-family: monospace; border-radius: 6px;
     outline: none; box-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+    letter-spacing: 1px;
 }
 
-/* АДАПТАЦІЯ ДЛЯ ТЕЛЕФОНІВ */
+/* =========================================================================
+   УНІФІКОВАНА МОБІЛЬНА АДАПТАЦІЯ ТА ФІКСИ ЕКРАНІВ ТЕЛЕФОНІВ
+   ========================================================================= */
 @media (max-width: 768px) {
-    .puzzle-mode-active { width: 85vw !important; height: 55vh !important; }
-}
-/* Кнопка підглядання фотографії в кодовому замку */
-.view-photo-btn {
-    margin-top: 12px;
-    background: #444;
-    color: #fff;
-    font-size: 0.75rem;
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    user-select: none;
-    transition: background 0.2s;
-    border: 1px solid rgba(255,255,255,0.1);
-}
-.view-photo-btn:hover { background: #555; }
+    .puzzle-mode-active {
+        width: 85vw !important;
+        height: 55vh !important;
+    }
 
-/* Магія підглядання: ховаємо замок і прибираємо блюр з картинки */
-.peek-photo .digital-lock-overlay {
-    opacity: 0 !important;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-}
-.peek-photo .target-blur-img {
-    filter: none !important;
-    transition: filter 0.2s ease;
+    /* Корекція геометрії пазлу на мобілках */
+    .real-puzzle-grid {
+        top: 10px; left: 10px;
+        width: calc(100% - 20px) !important;
+        height: calc(100% - 20px) !important;
+    }
+    .puzzle-piece img {
+        width: calc(200% + 20px) !important;
+        height: calc(200% + 20px) !important;
+    }
+    .piece-tl img { top: -10px; left: -10px; }
+    .piece-tr img { top: -10px; left: calc(-100% - 10px); }
+    .piece-bl img { top: calc(-100% - 10px); left: -10px; }
+    .piece-br img { top: calc(-100% - 10px); left: calc(-100% - 10px); }
+
+    .puzzle-hint-text {
+        font-size: 0.75rem;
+        top: -45px;
+        padding: 6px 14px;
+    }
+
+    /* Оптимізація тексту лотереї та мішеней на смартфонах */
+    .scratch-text { font-size: 0.8rem; padding: 10px; }
+    .target-item { font-size: 2rem; }
+    .lock-panel { padding: 15px; }
 }
