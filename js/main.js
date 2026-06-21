@@ -68,15 +68,11 @@ function prepareAndRenderGallery() {
 
     generateAllQuests();
 
-    // Відокремлюємо весільні фото
     const weddingPart = galleryData.filter(photo => pinnedWeddingPhotos.includes(photo.filename));
-
-    // Архівні фото сортуємо НАВПАКИ (від нових 2026 року до старих)
     const archivePart = galleryData
         .filter(photo => !pinnedWeddingPhotos.includes(photo.filename))
-        .reverse(); // Перевертаємо порядок масиву
+        .reverse();
 
-    // Об'єднуємо: спочатку весільні, потім архів від нових до старих
     sortedGalleryData = [...weddingPart, ...archivePart];
 
     timelineElement.innerHTML = "";
@@ -86,28 +82,54 @@ function prepareAndRenderGallery() {
         const isWedding = pinnedWeddingPhotos.includes(photo.filename);
         const questType = activeQuests[photo.filename];
 
+        // --- АВТОМАТИЧНЕ ВИЗНАЧЕННЯ КЛАСУ ПОВОРOТУ ---
+        let rotationClass = "";
+        if (photo.filename.startsWith("Фото 51 -")) {
+            rotationClass = "rotate-180";
+        } else if (
+            photo.filename.startsWith("Фото 19 -") ||
+            photo.filename.startsWith("Фото 39 -") ||
+            photo.filename.startsWith("Фото 41 -") ||
+            photo.filename.startsWith("Фото 42 -") ||
+            photo.filename.startsWith("Фото 43 -") ||
+            photo.filename.startsWith("Фото 49 -") ||
+            photo.filename.startsWith("Фото 55 -") ||
+            photo.filename.startsWith("Фото 57 -") ||
+            photo.filename.startsWith("Фото 58 -")
+        ) {
+            rotationClass = "rotate-90-right";
+        }
+        // --------------------------------------------
+
+        // Рендер плитки головної сторінки
         const card = document.createElement("div");
         card.className = isWedding ? "photo-card pinned-wedding-card" : "photo-card";
         card.innerHTML = `
             <div class="photo-link">
                 <div class="photo-wrapper">
                     ${isWedding ? '<span class="wedding-badge">👑 Головне</span>' : ''}
-                    <img src="images/gallery/${photo.filename}" alt="Спогад" loading="lazy">
+                    <img src="images/gallery/${photo.filename}" class="${rotationClass}" alt="Спогад" loading="lazy">
                 </div>
             </div>
         `;
         card.addEventListener("click", () => openSlider(index));
         timelineElement.appendChild(card);
 
+        // Рендер слайдів для Swiper
         const swiperSlide = document.createElement("div");
         swiperSlide.className = "swiper-slide";
 
         if (questType && !unlockedQuests[photo.filename]) {
             swiperSlide.innerHTML = generateQuestHTML(questType, photo.filename, index);
+            // Додаємо клас повороту на картинку всередині заблокованого квесту (якщо це не пазл)
+            const imgInQuest = swiperSlide.querySelector(".slide-main-img");
+            if (imgInQuest && questType !== "puzzle" && rotationClass) {
+                imgInQuest.classList.add(rotationClass);
+            }
         } else {
             swiperSlide.innerHTML = `
                 <div class="slide-frame-container">
-                    <img src="images/gallery/${photo.filename}" class="slide-main-img" alt="Презентація">
+                    <img src="images/gallery/${photo.filename}" class="slide-main-img ${rotationClass}" alt="Презентація">
                 </div>
             `;
         }
@@ -374,3 +396,21 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCountdown();
     setInterval(updateCountdown, 1000);
 });
+
+/* Розумний поворот фотографій через JS */
+.rotate-180 {
+    transform: rotate(180deg) !important;
+}
+
+.rotate-90-right {
+    transform: rotate(90deg) !important;
+    /* Змушуємо картинку адаптувати свої пропорції під рамку 3:4 при повороті */
+    max-height: 50vh !important;
+    object-fit: contain !important;
+}
+
+/* Для плиток на головній сторінці, щоб вони теж не ламалися */
+.photo-card .rotate-90-right {
+    max-height: 100% !important;
+    transform: scale(0.75) rotate(90deg) !important;
+}
