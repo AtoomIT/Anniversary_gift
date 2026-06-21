@@ -397,20 +397,3 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(updateCountdown, 1000);
 });
 
-/* Розумний поворот фотографій через JS */
-.rotate-180 {
-    transform: rotate(180deg) !important;
-}
-
-.rotate-90-right {
-    transform: rotate(90deg) !important;
-    /* Змушуємо картинку адаптувати свої пропорції під рамку 3:4 при повороті */
-    max-height: 50vh !important;
-    object-fit: contain !important;
-}
-
-/* Для плиток на головній сторінці, щоб вони теж не ламалися */
-.photo-card .rotate-90-right {
-    max-height: 100% !important;
-    transform: scale(0.75) rotate(90deg) !important;
-}
