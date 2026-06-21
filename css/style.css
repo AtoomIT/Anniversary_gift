@@ -748,15 +748,18 @@ footer {
     transform: rotate(180deg) !important;
 }
 
+/* Розумний фізичний поворот пікселів без зсуву контейнера */
 .rotate-90-right {
-    transform: rotate(90deg) !important;
-    /* Змушуємо картинку адаптувати свої пропорції під рамку 3:4 при повороті */
-    max-height: 50vh !important;
+    image-orientation: 90deg !important; /* Розгортає самі пікселі всередині рідних меж */
+    width: 100% !important;
+    height: 100% !important;
     object-fit: contain !important;
 }
 
-/* Для плиток на головній сторінці, щоб вони теж не ламалися */
+/* Для головної сторінки плиток */
 .photo-card .rotate-90-right {
-    max-height: 100% !important;
-    transform: scale(0.75) rotate(90deg) !important;
+    image-orientation: 90deg !important;
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
 }

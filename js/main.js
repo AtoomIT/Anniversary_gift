@@ -68,11 +68,15 @@ function prepareAndRenderGallery() {
 
     generateAllQuests();
 
+    // Відокремлюємо весільні фото
     const weddingPart = galleryData.filter(photo => pinnedWeddingPhotos.includes(photo.filename));
+
+    // Архівні фото сортуємо НАВПАКИ (від нових 2026 року до старих)
     const archivePart = galleryData
         .filter(photo => !pinnedWeddingPhotos.includes(photo.filename))
         .reverse();
 
+    // Об'єднуємо: спочатку весільні, потім архів від нових до старих
     sortedGalleryData = [...weddingPart, ...archivePart];
 
     timelineElement.innerHTML = "";
@@ -82,7 +86,7 @@ function prepareAndRenderGallery() {
         const isWedding = pinnedWeddingPhotos.includes(photo.filename);
         const questType = activeQuests[photo.filename];
 
-        // --- АВТОМАТИЧНЕ ВИЗНАЧЕННЯ КЛАСУ ПОВОРOТУ ---
+        // --- РОЗУМНЕ ВИЗНАЧЕННЯ КЛАСУ ПОВОРOТУ ДЛЯ СКАНІВ ---
         let rotationClass = "";
         if (photo.filename.startsWith("Фото 51 -")) {
             rotationClass = "rotate-180";
@@ -99,9 +103,9 @@ function prepareAndRenderGallery() {
         ) {
             rotationClass = "rotate-90-right";
         }
-        // --------------------------------------------
+        // --------------------------------------------------
 
-        // Рендер плитки головної сторінки
+        // 1. Рендер плитки головної сторінки (галереї)
         const card = document.createElement("div");
         card.className = isWedding ? "photo-card pinned-wedding-card" : "photo-card";
         card.innerHTML = `
@@ -115,18 +119,22 @@ function prepareAndRenderGallery() {
         card.addEventListener("click", () => openSlider(index));
         timelineElement.appendChild(card);
 
-        // Рендер слайдів для Swiper
+        // 2. Рендер слайдів для повноекранного Swiper
         const swiperSlide = document.createElement("div");
         swiperSlide.className = "swiper-slide";
 
         if (questType && !unlockedQuests[photo.filename]) {
+            // Якщо квест ще не пройдено, рендеримо HTML-гру
             swiperSlide.innerHTML = generateQuestHTML(questType, photo.filename, index);
-            // Додаємо клас повороту на картинку всередині заблокованого квесту (якщо це не пазл)
+
+            // Якщо це замок, радар або тир (і картинка там розмита), додаємо їй клас повороту
+            // Пазл (puzzle) не чіпаємо, бо там картинка нарізана координатами
             const imgInQuest = swiperSlide.querySelector(".slide-main-img");
             if (imgInQuest && questType !== "puzzle" && rotationClass) {
                 imgInQuest.classList.add(rotationClass);
             }
         } else {
+            // Якщо квест пройдено або це звичайне фото без гри
             swiperSlide.innerHTML = `
                 <div class="slide-frame-container">
                     <img src="images/gallery/${photo.filename}" class="slide-main-img ${rotationClass}" alt="Презентація">
@@ -396,4 +404,3 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCountdown();
     setInterval(updateCountdown, 1000);
 });
-
